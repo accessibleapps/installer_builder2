@@ -1,0 +1,11 @@
+name = "installer_builder2"
+description = "Build distributable applications"
+version = "0.1.0"
+authors = [
+    { name = "Christopher Toth", email = "q@q-continuum.net" }
+]
+dependencies = [
+    "attrs",
+    'innosetup_builder',
+    'nuitka',
+]
