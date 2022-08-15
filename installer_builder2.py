@@ -42,7 +42,7 @@ class InstallerBuilder:
         innosetup_installer.app_short_description = self.description
         innosetup_installer.run_at_startup = self.run_at_startup
         installer_filename = self.dist_path / (self.app_name + '-' + self.version + '.exe')
-        innosetup_compiler.build(installer, installer_filename)
+        innosetup_compiler.build(innosetup_installer, installer_filename)
 
     def create_dmg(self):
         dmg_filename = self.dist_path / (self.app_name + '-' + self.version + '.dmg')
