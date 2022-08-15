@@ -58,7 +58,8 @@ class InstallerBuilder:
                 update_zip.write(file)
 
     def build(self):
-        #self.compile_distribution()
+        
+        self.compile_distribution()
         if OS == 'Windows':
             self.create_installer()
         elif OS == 'Darwin':
