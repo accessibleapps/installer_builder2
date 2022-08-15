@@ -13,8 +13,8 @@ OS = platform.system()
 
 @define
 class InstallerBuilder:
-    app_name = field(converter=str, type=str)
-    dist_path = field(default='dist', converter=pathlib.Path, type=pathlib.Path)
+    app_name = field(converter=str)
+    dist_path = field(default='dist', converter=pathlib.Path)
     main_module = field(default='')
     version = field(default='0.0', converter=str)
     author = field(default='', converter=str)
