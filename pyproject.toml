@@ -13,4 +13,5 @@ dependencies = [
     "attrs",
     'innosetup_builder',
     'nuitka',
+    'orderedset', # For faster Nuitka compiles
 ]
