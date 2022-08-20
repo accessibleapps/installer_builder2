@@ -8,7 +8,6 @@ import zipfile
 import innosetup_builder
 from attr import Factory, define, field
 
-innosetup_compiler = innosetup_builder.InnosetupCompiler()
 
 OS = platform.system()
 
@@ -48,6 +47,7 @@ class InstallerBuilder:
         installer_filename = self.dist_path / \
             (self.app_name + '-' + self.version + '.exe')
         innosetup_installer.output_base_filename = installer_filename
+        innosetup_compiler = innosetup_builder.InnosetupCompiler()
         innosetup_compiler.build(
             innosetup_installer, output_path=self.dist_path)
 
