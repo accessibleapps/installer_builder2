@@ -5,7 +5,7 @@ import subprocess
 import sys
 import zipfile
 
-import innosetup_builder
+
 from attr import Factory, define, field
 
 
@@ -23,6 +23,7 @@ class InstallerBuilder:
     url: str = field(default='', converter=str)
     company_name: str = field(default='')
     include_modules: list = field(default=Factory(list), converter=list)
+    include_packages: list = field(default=Factory(list), converter=list)
     data_files: list = field(default=Factory(list), converter=list)
     data_directories: list = field(default=Factory(list), converter=list)
     data_file_modules: list = field(default=Factory(list), converter=list)
@@ -32,9 +33,10 @@ class InstallerBuilder:
 
     def compile_distribution(self):
         run_nuitka(self.main_module, self.dist_path, app_name=self.app_name, app_version=self.version, company_name=self.company_name,
-                   include_modules=self.include_modules, include_data_files=self.data_files, include_data_dirs=self.data_directories)
+                   include_modules=self.include_modules, include_data_files=self.data_files, include_data_dirs=self.data_directories, packages_to_include=self.include_packages)
 
     def create_installer(self):
+        import innosetup_builder
         innosetup_installer = innosetup_builder.Installer()
         innosetup_installer.app_name = self.app_name
         innosetup_installer.files = innosetup_builder.all_files(
