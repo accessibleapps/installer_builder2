@@ -5,9 +5,7 @@ import subprocess
 import sys
 import zipfile
 
-
 from attr import Factory, define, field
-
 
 OS = platform.system()
 
@@ -56,16 +54,25 @@ class InstallerBuilder:
     def create_dmg(self):
         dmg_filename = self.dist_path / \
             (self.app_name + '-' + self.version + '.dmg')
-        app_path = self.dist_path / 'main.dist'
+        dist_path = self.dist_path / 'main.dist'
+        # move dist_path/main.app into dist_path/main.dist/
+        final_path = dist_path / (self.app_name + '.app')
+        original_app = self.dist_path / (self.app_name + '.app')
+        original_app.replace(final_path)
         subprocess.check_call(
-            ['hdiutil', 'create', '-srcfolder', app_path, dmg_filename])
+            ['hdiutil', 'create', '-srcfolder', dist_path, dmg_filename])
 
     def rename_executable(self):
-        # Nuitka always generates an executable as self.dist_path/main.dist/main.exe
+        # Nuitka always generates an executable as self.dist_path/main.dist/main.exe on windows
+        # On Mac, it's self.dist_path/main.app
         # rename it with the applications's name
         if OS == 'Windows':
             main_exe = self.dist_path / 'main.dist' / 'main.exe'
             new_exe = self.dist_path / 'main.dist' / (self.app_name + '.exe')
+            main_exe.replace(new_exe)
+        elif OS == 'Darwin':
+            main_exe = self.dist_path / 'main.app'
+            new_exe = self.dist_path / (self.app_name + '.app')
             main_exe.replace(new_exe)
 
     def create_update_zip(self):
