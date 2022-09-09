@@ -24,14 +24,14 @@ class InstallerBuilder:
     include_packages: list = field(default=Factory(list), converter=list)
     data_files: list = field(default=Factory(list), converter=list)
     data_directories: list = field(default=Factory(list), converter=list)
-    data_file_modules: list = field(default=Factory(list), converter=list)
+    data_file_packages: list = field(default=Factory(list), converter=list)
     icon: str = field(default='')
     description: str = field(default='')
     license: str = field(default='')
 
     def compile_distribution(self):
         run_nuitka(self.main_module, self.dist_path, app_name=self.app_name, app_version=self.version, company_name=self.company_name,
-                   include_modules=self.include_modules, include_data_files=self.data_files, include_data_dirs=self.data_directories, packages_to_include=self.include_packages)
+                   include_modules=self.include_modules, include_data_files=self.data_files, include_data_dirs=self.data_directories, packages_to_include=self.include_packages, data_file_packages=self.data_file_packages)
 
     def create_installer(self):
         import innosetup_builder
@@ -101,7 +101,7 @@ class InstallerBuilder:
         self.create_update_zip()
 
 
-def run_nuitka(main_module, output_path=pathlib.Path('dist'), include_modules=None, packages_to_include=None, console=False, onefile=False, include_data_files=None, include_data_dirs=None, app_name="", company_name="", app_version="", numpy=False):
+def run_nuitka(main_module, output_path=pathlib.Path('dist'), include_modules=None, packages_to_include=None, console=False, onefile=False, include_data_files=None, include_data_dirs=None, app_name="", company_name="", app_version="", numpy=False, data_file_packages=None):
     if include_modules is None:
         include_modules = []
     include_modules = ['--include-module=' +
@@ -109,7 +109,7 @@ def run_nuitka(main_module, output_path=pathlib.Path('dist'), include_modules=No
     include_packages = []
     if packages_to_include:
         include_packages = ['--include-package=' +
-                            package for package in packages_to_include]
+                            include_ for include_ in packages_to_include]
     if include_data_files is None:
         include_data_files = []
     include_data_files = ['--include-data-files=' +
@@ -118,10 +118,14 @@ def run_nuitka(main_module, output_path=pathlib.Path('dist'), include_modules=No
         include_data_dirs = []
     include_data_dirs = ['--include-data-dir=' +
                          data_dir for data_dir in _format_nuitka_datafiles(include_data_dirs)]
+    if data_file_packages is None:
+        data_file_packages = []
+    data_file_packages = ['--include-package-data=' +
+                          package for package in data_file_packages]
     extra_options = ['--assume-yes-for-downloads',
                      '--output-dir=' + str(output_path)]
     command = [sys  .executable, '-m', 'nuitka', '--standalone', *include_modules,
-               *include_packages, *include_data_files, *include_data_dirs, *extra_options, main_module]
+               *include_packages, *include_data_files, *include_data_dirs, *data_file_packages, *extra_options, main_module]
     if onefile:
         command.append('--onefile')
     if not console:
