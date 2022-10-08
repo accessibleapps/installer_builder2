@@ -45,9 +45,7 @@ class InstallerBuilder:
         innosetup_installer.main_executable = self.dist_path / 'main.build/main.exe'
         innosetup_installer.app_short_description = self.description
         innosetup_installer.run_at_startup = self.run_at_startup
-        innosetup_builder.output_base_filename = self.app_name
-        installer_filename = (self.app_name + '-' +
-                              self.version + ' setup.exe')
+        installer_filename = (self.app_name + '-' + self.version + ' setup')
         innosetup_installer.output_base_filename = installer_filename
         innosetup_compiler = innosetup_builder.InnosetupCompiler()
         innosetup_compiler.build(
