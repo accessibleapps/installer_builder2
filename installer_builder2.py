@@ -48,8 +48,9 @@ class InstallerBuilder:
         installer_filename = (self.app_name + '-' + self.version + ' setup')
         innosetup_installer.output_base_filename = installer_filename
         innosetup_compiler = innosetup_builder.InnosetupCompiler()
+
         innosetup_compiler.build(
-            innosetup_installer, output_path=self.dist_path)
+            innosetup_installer)
 
     def create_dmg(self):
         dmg_filename = self.dist_path / \
@@ -80,13 +81,13 @@ class InstallerBuilder:
         """
         zip_filename = self.dist_path / \
             (self.app_name + '-' + self.version + '.zip')
+        dist_path = self.dist_path / 'main.dist'
         with zipfile.ZipFile(zip_filename, 'w') as zip_file:
-            # walk the directory tree and compress the files in each folder.
-            for folder, subfolders, files in os.walk(self.dist_path / 'main.dist'):
-                for file in files:
-                    filename = os.path.join(folder, file)
-                    zip_file.write(filename, arcname=filename,
-                                   compress_type=zipfile.ZIP_DEFLATED)
+            # Using Pathlib, walk the directory tree and compress the files in each folder. the contents of main.dist will be at the root of the zip file
+            for file in dist_path.rglob('*'):
+                if file.is_file():
+                    zip_file.write(file, file.relative_to(
+                        dist_path))
 
     def build(self):
         self.compile_distribution()
