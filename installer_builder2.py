@@ -18,7 +18,7 @@ class InstallerBuilder:
     version: str = field(default='0.0', converter=str)
     author: str = field(default='', converter=str)
     run_at_startup: bool = field(default=False)
-    console: bool = field(default=False)
+    console: bool = field(default=False) # For compiling your app in console/command line mode
     url: str = field(default='', converter=str)
     company_name: str = field(default='')
     include_modules: list = field(default=Factory(list), converter=list)
