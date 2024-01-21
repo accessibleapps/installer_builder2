@@ -18,6 +18,7 @@ class InstallerBuilder:
     version: str = field(default='0.0', converter=str)
     author: str = field(default='', converter=str)
     run_at_startup: bool = field(default=False)
+    console: bool = field(default=False) # For compiling your app in console/command line mode
     url: str = field(default='', converter=str)
     company_name: str = field(default='')
     include_modules: list = field(default=Factory(list), converter=list)
@@ -32,7 +33,7 @@ class InstallerBuilder:
 
     def compile_distribution(self):
         run_nuitka(self.main_module, self.dist_path, app_name=self.app_name, app_version=self.version, company_name=self.company_name,
-                   include_modules=self.include_modules, include_data_files=self.data_files, include_data_dirs=self.data_directories, packages_to_include=self.include_packages, data_file_packages=self.data_file_packages, ignore_imports=self.ignore_imports)
+                   include_modules=self.include_modules, include_data_files=self.data_files, include_data_dirs=self.data_directories, packages_to_include=self.include_packages, data_file_packages=self.data_file_packages, ignore_imports=self.ignore_imports, console=self.console)
 
     def create_installer(self):
         import innosetup_builder
