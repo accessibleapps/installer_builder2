@@ -54,6 +54,25 @@ builder.build()
 
 For more detailed instructions and configuration options, please refer to the documentation provided within the package.
 
+The offline unit suite exercises data-file formatting and captures the exact
+Nuitka command without starting a compiler, installer, signer or release:
+
+```bash
+uv run --isolated --no-project --python 3.13 --with attrs==26.1.0 python -m unittest discover -v
+uv build
+```
+
+CI runs all seven tests and verifies the wheel/source distribution on Windows
+and macOS with Python 3.13. This checks path and command construction; it does
+not validate a frozen application or claim coverage of the entire historical
+Python support range.
+
+Use `data_directories=["assets/"]` to include a directory recursively through
+Nuitka's `--include-data-dir=source=target` option. Existing explicit
+`"source=target"` mappings are preserved.
+`enable_deployment=True` adds Nuitka's `--deployment` flag, which disables
+its non-deployment runtime helpers; it remains disabled by default.
+
 Contributing
 ------------
 Contributions to Installer Builder 2 are welcome! Please feel free to submit pull requests or create issues for bugs and feature requests.
