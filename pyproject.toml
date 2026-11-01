@@ -15,3 +15,6 @@ dependencies = [
     'nuitka',
     'ordered_set', # For faster Nuitka compiles
 ]
+
+[tool.setuptools]
+py-modules = ["installer_builder2"]

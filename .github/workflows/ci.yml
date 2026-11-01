@@ -1,0 +1,41 @@
+name: Offline formatter tests and package
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Offline tests (${{ matrix.os }}, Python 3.13)
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          version: "0.13.4"
+          enable-cache: false
+      - name: Run complete offline unit suite
+        run: uv run --isolated --no-project --python 3.13 --with attrs==26.1.0 python -m unittest discover -v
+      - name: Build wheel and source distribution
+        run: |
+          uv build
+          test -s dist/installer_builder2-0.1.8-py3-none-any.whl
+          test -s dist/installer_builder2-0.1.8.tar.gz
