@@ -20,7 +20,7 @@ class InstallerBuilder:
     author: str = field(default='', converter=str)
     run_at_startup: bool = field(default=False)
     console: bool = field(default=False) # For compiling your app in console/command line mode
-    enable_deployment: bool = field(default=False) # Enable deployment mode for better compatibility
+    enable_deployment: bool = field(default=False) # Pass Nuitka's --deployment, which disables its non-deployment safety helpers
     url: str = field(default='', converter=str)
     company_name: str = field(default='')
     include_modules: list = field(default=Factory(list), converter=list)
