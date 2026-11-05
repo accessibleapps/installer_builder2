@@ -26,10 +26,10 @@ Requirements
 
 Installation
 ------------
-To install Installer Builder 2, you can use pip:
+Installer Builder 2 isn't on PyPI, so install it from GitHub with pip:
 
 ```bash
-pip install installer_builder2
+pip install git+https://github.com/accessibleapps/installer_builder2.git
 ```
 
 Usage
